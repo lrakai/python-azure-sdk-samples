@@ -6,7 +6,7 @@ from config import CONFIG
 from credentials import credential_helper
 
 def list_deploymentslots():
-    ''' List Azure App Service Plans '''
+    ''' List Azure Web App deployment slots '''
     credentials, subscription_id = credential_helper.get_credentials()
     resource_group = CONFIG['resource_group']
 
