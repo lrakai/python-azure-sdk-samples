@@ -5,7 +5,7 @@ from azure.mgmt.web import WebSiteManagementClient
 from config import CONFIG
 from credentials import credential_helper
 
-def list_webapps():
+def list_deploymentslots():
     ''' List Azure App Service Plans '''
     credentials, subscription_id = credential_helper.get_credentials()
     resource_group = CONFIG['resource_group']
@@ -18,5 +18,5 @@ def list_webapps():
 
 
 if __name__ == "__main__":
-    has_webapps = list_webapps()
-    print(has_webapps)
+    has_deploymentslots = list_deploymentslots()
+    print(has_deploymentslots)
