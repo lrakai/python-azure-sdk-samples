@@ -1,26 +1,15 @@
-import os
 import json
 
-from azure.common.credentials import ServicePrincipalCredentials
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.web import WebSiteManagementClient
 
 from config import CONFIG
-
-
-def get_credentials():
-    subscription_id = CONFIG['subscription_id']
-    credentials = ServicePrincipalCredentials(
-        client_id=CONFIG['client_id'],
-        secret=CONFIG['client_secret'],
-        tenant=CONFIG['tenant_id']
-    )
-    return credentials, subscription_id
+from credentials import credential_helper
 
 
 def list_asps():
     ''' List Azure App Service Plans '''
-    credentials, subscription_id = get_credentials()
+    credentials, subscription_id = credential_helper.get_credentials()
     resource_group = CONFIG['resource_group']
 
     resource_client = ResourceManagementClient(credentials, subscription_id)
