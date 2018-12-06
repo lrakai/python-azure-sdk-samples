@@ -5,6 +5,7 @@ from azure.mgmt.web import WebSiteManagementClient
 from config import CONFIG
 from credentials import credential_helper
 
+
 def list_webapps():
     ''' List Azure Web Apps '''
     credentials, subscription_id = credential_helper.get_credentials()

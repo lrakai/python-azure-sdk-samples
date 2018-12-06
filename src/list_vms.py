@@ -25,6 +25,7 @@ def list_vms():
 
     return any(compute_client.virtual_machines.list(resource_group))
 
+
 if __name__ == "__main__":
     has_vms = list_vms()
     print(has_vms)

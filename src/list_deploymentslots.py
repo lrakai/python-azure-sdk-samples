@@ -5,6 +5,7 @@ from azure.mgmt.web import WebSiteManagementClient
 from config import CONFIG
 from credentials import credential_helper
 
+
 def list_deploymentslots():
     ''' List Azure Web App deployment slots '''
     credentials, subscription_id = credential_helper.get_credentials()

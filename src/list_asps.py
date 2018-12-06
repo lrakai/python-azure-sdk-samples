@@ -22,6 +22,7 @@ def list_asps():
 
     return any(web_client.app_service_plans.list_by_resource_group(resource_group))
 
+
 if __name__ == "__main__":
     has_asps = list_asps()
     print(has_asps)
