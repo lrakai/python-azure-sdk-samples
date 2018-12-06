@@ -2,7 +2,7 @@
 
 Samples illustrating how to use the Python Azure SDK
 
-# Getting started
+## Getting started
 
 1. Create a credentials file in the project root named `secrets.ps1`. The format of the file is as follows:
 
