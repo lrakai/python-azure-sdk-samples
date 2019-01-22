@@ -7,3 +7,15 @@ CONFIG = {
     'tenant_id'      : os.environ.get('AZURE_TENANT_ID'),
     'resource_group' : os.environ.get('AZURE_RESOURCE_GROUP', 'my-rg')
 }
+
+EVENT_CONFIG = {
+    'credentials': {
+        'credential_id' : CONFIG['client_id'],
+        'credential_key': CONFIG['client_secret']
+    },
+    'environment_params': {
+        'subscription_id': CONFIG['subscription_id'],
+        'tenant'         : CONFIG['tenant_id'],
+        'resource_group' : CONFIG['resource_group']
+    }
+}
