@@ -10,8 +10,8 @@ from credentials import credential_helper
 
 
 def run_powershell():
-    credentials, subscription_id = get_credentials(event)
-    resource_group = event['environment_params']['resource_group']
+    credentials, subscription_id = credential_helper.get_credentials()
+    resource_group = CONFIG['resource_group']
 
     compute_client = ComputeManagementClient(credentials, subscription_id)
 
