@@ -19,7 +19,7 @@ cp $REQUIREMENTS requirements.txt
 
 rm -rf venv # clean start
 
-python3.7 -m venv venv
+python3.8 -m venv venv
 source ./venv/bin/activate
 pip install pylint autopep8 # dev dependencies
 pip install -r requirements.txt # prod dependencies
