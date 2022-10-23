@@ -23,7 +23,9 @@ def run_powershell():
     parameters = {
         'command_id': 'RunPowerShellScript',
         'script': [
-          'sqlcmd -S ca-lab-vm -E -Q "use calabs;select TOP 1 * from order_summaries" | SELECT -Last 1'
+          '''
+          Get-Content -Path C:/Users/student/Desktop/pat.txt | Write-Host
+          '''
         ]
     }
 
