@@ -29,6 +29,17 @@ def get_token_with_password(tenant, username, password):
 
     return json.loads(response.content)["access_token"]
 
+def get_token_for_azure_portal_api(credentials, tenant_id):
+    token_endpoint = "https://login.microsoftonline.com/fd1fbf9f-991a-40b4-ae26-61dfc34421ef/oauth2/v2.0/token"
+    data = {
+        'grant_type': 'client_credentials',
+        'client_id': credentials._client_id,
+        'client_secret': credentials._client_credential,
+        'scope': '74658136-14ec-4630-ad9b-26e160ff0fc6/.default'
+    }
+    response = requests.post(token_endpoint, data=data)
+    return response.json()['access_token']
+
 
 def authorized_get(uri, token):
     return requests.get(
@@ -41,14 +52,16 @@ def authorized_get(uri, token):
     )
 
 
-def authorized_post(uri, token, data):
+def authorized_post(uri, token, additional_headers={}, data=None):
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    headers.update(additional_headers)
     return requests.post(
         uri,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
-        },
-        data=json.dumps(data),
+        headers=headers,
+        data=data,
         timeout=10
     )
 
