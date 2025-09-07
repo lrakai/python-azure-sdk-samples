@@ -1,45 +1,50 @@
 import json
 
-import re
-from azure.common.credentials import ServicePrincipalCredentials
+
+from azure.identity import ClientSecretCredential
 from azure.mgmt.compute import ComputeManagementClient
-from msrestazure.azure_exceptions import CloudError
-
-from config import CONFIG
-from credentials import credential_helper
 
 
-def run_powershell():
-    credentials, subscription_id = credential_helper.get_credentials()
-    resource_group = CONFIG['resource_group']
+def with_hint(result, hint=None):
+    return {"result": result, "hint_message": hint} if hint else result
 
-    compute_client = ComputeManagementClient(credentials, subscription_id)
 
-    machines = [machine for machine in compute_client.virtual_machines.list(resource_group)]
+def handler(event, context):
+    credentials, subscription_id = get_credentials(event)
+    resource_group = event["environment_params"]["resource_group"]
+
+    client = ComputeManagementClient(credentials, subscription_id)
+
+    machines = [machine for machine in client.virtual_machines.list(resource_group)]
     if not any(machines):
-        return False
+        return with_hint(False, "Wait for the VM to be provisioned.")
+
     vm_name = machines[0].name
 
     parameters = {
-        'command_id': 'RunPowerShellScript',
-        'script': [
-          '''
-          Get-Content -Path C:/Users/student/Desktop/pat.txt | Write-Host
-          '''
-        ]
+        "command_id": "RunPowerShellScript",
+        "script": [
+            """
+            Set-Location -Path C:\\Users\\student\\llm-apps
+            Write-Host "Bootstrapped"
+            """
+        ],
     }
 
     try:
-        poller = compute_client.virtual_machines.run_command(resource_group, vm_name, parameters)
-        result = poller.result()
-    except CloudError as exception:
-        if 'Run command extension execution is in progress. Please wait for completion before invoking a run command.' in exception.message:
-            return False
-        print(exception)
-        raise exception
+        poller = client.virtual_machines.begin_run_command(
+            resource_group, vm_name, parameters
+        )
+        result = poller.result(timeout=None)
+    except Exception as e:
+        print(e)
+        return with_hint(False, "Failed to run command on the VM.")
 
-    match = re.search("^\((\d+) rows affected\)$", result.value[0].message)
-    return match is not None and int(match.group(1)) > 0
+    match = "ALL TESTS PASSED" in result.value[0].message
+    if match:
+        return True
+    else:
+        return with_hint(False, "Success criteria not met.")
 
 
 if __name__ == "__main__":
